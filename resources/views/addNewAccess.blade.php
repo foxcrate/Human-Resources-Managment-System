@@ -5,11 +5,11 @@
         <div class="form-group">
             <label>أدخل الإسم</label>
             <input name="accessName" type="text" class="form-control"  placeholder="أدخل الإسم" >
+            @error('accessName')
+            <div class="alert-warning">{{$errors->first('accessName')}}</div>
+            @enderror
         </div>
-        <div class="form-group">
-            <label>أدخل المهام</label>
-            <input name="functions" type="text" class="form-control"  placeholder="أدخل المهام" >
-        </div>
+        
         <br>
         <input type="submit" class="btn btn-info" value="حفظ">
     </form>

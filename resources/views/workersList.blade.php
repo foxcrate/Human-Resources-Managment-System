@@ -11,7 +11,7 @@
                     <th scope="col">الموبيل</th>
                     <th scope="col">العنوان</th>
                     <th scope="col">الإيميل</th>
-                    <th scope="col">أيام العمل</th>
+                    <!--<th scope="col">أيام العمل</th>-->
 
                 </tr>
             </thead>
@@ -24,12 +24,12 @@
                         <td>{{ $worker->mobileNumber }}</td>
                         <td>{{ $worker->address }}</td>
                         <td>{{ $worker->email }}</td>
-                        <td>{{ $worker->workDays }}</td>
+                        <!--<td>{{ $worker->workDays }}</td>-->
                         <td>
                             
-                                <a href="{{ url('/edit/'.$worker->id) }}" class="btn btn-sm btn-warning p-1">تعديل</a>
-                                <a href="{{ url('/delete/'.$worker->id) }}" class="btn btn-sm btn-warning p-1">مسح</a>
-                                <a href="{{ url('/show/'.$worker->id) }}" class="btn btn-sm btn-warning p-1">تفاصيل</a>
+                                <a href="{{ url('/edit/'.$worker->id) }}" class="btn btn-sm btn-warning p-1 m-1">تعديل</a>
+                                <a href="{{ url('/delete/'.$worker->id) }}" class="btn btn-sm btn-warning p-1 m-1">مسح</a>
+                                <a href="{{ url('/show/'.$worker->id) }}" class="btn btn-sm btn-warning p-1 m-1">تفاصيل</a>
                             
                             
                         </td>
@@ -47,8 +47,9 @@
 </div>
 <br>
 
-<!-- Search form -->
+<!-- 
 <form action="{{ url('/search') }}" method="post">
     @csrf
     <input class="form-control" name="workerName" type="text" placeholder="Search Worker" aria-label="Search">
 </form>
+-->

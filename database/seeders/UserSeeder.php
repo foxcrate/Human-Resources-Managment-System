@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $developer = Role::where('name','Web Developer')->first();
+        /*$developer = Role::where('name','Web Developer')->first();
         $manager = Role::where('name', 'Project Manager')->first();
         $createTasks = Permission::where('name','Create Tasks')->first();
         $manageUsers = Permission::where('name','Manage Users')->first();
@@ -36,7 +36,14 @@ class UserSeeder extends Seeder
         $user2->password = bcrypt('987654321');
         $user2->save();
         $user2->roles()->attach($developer);
-        $user2->permissions()->attach($createTasks);
+        $user2->permissions()->attach($createTasks);*/
+
+        $user1 = new User();
+        $user1->name = 'ahmed';
+        $user1->email = 'a@a';
+        $user1->mailPassword='aloo';
+        $user1->password = '123456789';
+        $user1->save();
 
     }
 }

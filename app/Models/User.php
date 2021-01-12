@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\HasRolesAndPermissions;
+use Illuminate\Support\Facades\Crypt;
 
 class User extends Authenticatable
 {
@@ -21,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'userType',
     ];
 
     /**
@@ -43,4 +45,13 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime', 
         //'roles' => 'array',
     ];
+
+    public function setEmailPasswordAttribute($value) {
+        $this->attributes['emailPassword'] = Crypt::encryptString($value);
+    }
+
+    public function getEmailPasswordAttribute($value) {
+        return Crypt::decryptString($value);
+    }
+
 }

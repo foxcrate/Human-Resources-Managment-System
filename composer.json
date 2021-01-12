@@ -19,6 +19,7 @@
         "laravel/ui": "^3.1",
         "maatwebsite/excel": "^3.1",
         "mramadan0101/dompdf": "^0.8.7",
+        "nesbot/carbon": "^2.43",
         "niklasravnsborg/laravel-pdf": "^4.0",
         "phpoffice/phpword": "^0.17.0"
     },

@@ -14,7 +14,7 @@
                 <div class="card-header">
                     <h1 class="text-info"><i class="fa fa-key"></i>الرتب المتوفرة </h1>
                     <section class="float-right">
-                        <a href="{{ url('/roles/toAdd2') }}" class="btn btn-outline-primary">إضافة رتبة</a>
+                        <a href="{{ url('/roles/toAddRole') }}" class="btn btn-outline-primary">إضافة رتبة</a>
                     </section>
                 </div>
                 <div class="card-block table-border-style">

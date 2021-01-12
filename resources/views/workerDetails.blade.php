@@ -102,7 +102,7 @@
                                         
                                         <tr>
                                             <th>رقم موبيل ثاني</th>
-                                            <td>{{$worker->mobileNumber2}}</td>
+                                            <td>{{$worker->anotherMobileNumber}}</td>
                                         </tr>
                                         
                                         <tr>
@@ -122,12 +122,12 @@
                                         
                                         <tr>
                                             <th>عدد أيام العمل شهريا</th>   
-                                            <td>{{$worker->monthWorkedDays}}</td>
+                                            <td>{{$worker->daysAttended}}</td>
                                         </tr>
                                         
                                         <tr>
                                             <th>عدد ساعات العمل شهريا</th>
-                                            <td>{{$worker->monthWorkedHours}}</td>
+                                            <td>{{$worker->hoursWorked}}</td>
                                         </tr>
                                     
                                         <tr>
@@ -137,7 +137,7 @@
                                                         <div class="row">
                                                             <div class="col-6">
                                                                 <!-- <p class="mb-0">{{$worker->totalSalary}}</p> -->
-                                                                {{$worker->totalSalary}}
+                                                                {{$worker->salaryToTake}}
                                                             </div>
                                                             <div class="col-6" dir="ltr">
                                                                 <a href="{{ url('/show/salaryDetails/'.$worker->id)}}"  class="btn btn-sm btn-warning">تفاصيل </a>
@@ -183,7 +183,7 @@
                                             
                                             <tr>
                                                 <th>رقم موبيل ثاني</th>
-                                                <td>{{$worker->mobileNumber2}}</td>
+                                                <td>{{$worker->anotherMobileNumber}}</td>
                                             </tr>
                                             
                                             <tr>
@@ -203,12 +203,12 @@
                                             
                                             <tr>
                                                 <th>عدد أيام العمل شهريا</th>   
-                                                <td>{{$worker->monthWorkedDays}}</td>
+                                                <td>{{$worker->daysAttended}}</td>
                                             </tr>
                                             
                                             <tr>
                                                 <th>عدد ساعات العمل شهريا</th>
-                                                <td>{{$worker->monthWorkedHours}}</td>
+                                                <td>{{$worker->hoursWorked}}</td>
                                             </tr>
                                         
                                             <tr>
@@ -218,7 +218,7 @@
                                                         <div class="row">
                                                             <div class="col-6">
                                                                 <!-- <p class="mb-0">{{$worker->totalSalary}}</p> -->
-                                                                {{$worker->totalSalary}}
+                                                                {{$worker->salaryToTake}}
                                                             </div>
                                                             <div class="col-6" dir="ltr">
                                                                 <a href="{{ url('/show/salaryDetails/'.$worker->id)}}"  class="btn btn-sm btn-warning">تفاصيل </a>
@@ -238,34 +238,29 @@
                                         <table class="table  table-bordered"> 
                                             <tbody>
                                                 <tr>
-                                                    <th> أجر اليوم</th>
-                                                    <td>{{$worker->dayPaid}}</td>
-                                                </tr>
-
-                                                <tr>
                                                     <th>  أجر الساعة</th>
-                                                    <td>{{$worker->hourPaid}}</td>
+                                                    <td>{{$worker->hourPay}}</td>
                                                 </tr>  
 
                                                 <tr>
-                                                    <th> ساعات عمل الشهر</th>
-                                                    <td>{{$worker->monthlyShouldWorkedHours}}</td>
+                                                    <th> ساعات العمل الواجبه شهريا</th>
+                                                    <td>{{$worker->shouldWorkedDays}}</td>
                                                 </tr>
 
                                                 <tr>
                                                     <th>وقت الحضور</th>
-                                                    <td>{{$worker->attendanceTime}}</td>
+                                                    <td>{{$worker->shouldArriveTime}}</td>
                                                 </tr>
 
                                                 <tr>
                                                     <th>وقت الإنصراف</th>
-                                                    <td>{{$worker->leaveTime}}</td>
+                                                    <td>{{$worker->shouldLeaveTime}}</td>
                                                 </tr>
                                                                                         
-                                                <tr>
+                                                <!--<tr>
                                                     <th> وقت التأخير</th>
                                                     <td>{{$worker->lateTime}}</td>
-                                                </tr>
+                                                </tr>-->
                                                                                         
                                                 <tr>
                                                     <th> أيام حضوره</th>
@@ -278,8 +273,8 @@
                                                 </tr>
                                                                                         
                                                 <tr>
-                                                    <th>أيام تأخيره</th>
-                                                    <td>{{$worker->daysLated}}</td>
+                                                    <th>ساعات تأخيره</th>
+                                                    <td>{{$worker->hoursLated}}</td>
                                                 </tr>
                                                                                         
                                                 <tr>
@@ -318,18 +313,18 @@
                                                 </tr>
                                                                                         
                                                 <tr>
-                                                    <th> غياب</th>
+                                                    <th> جزاء غياب</th>
                                                     <td>{{$worker->dayAbsencePay}}</td>
                                                 </tr>
                                                                                         
                                                 <tr>
-                                                    <th> تأخير</th>
-                                                    <td>{{$worker->dayLatePay}}</td>
+                                                    <th> جزاء تأخير</th>
+                                                    <td>{{$worker->latePay}}</td>
                                                 </tr>
                                                                                         
                                                 <tr>
-                                                    <th> جزئة</th>
-                                                    <td>{{$worker->naughtyPay}}</td>
+                                                    <th> جزية</th>
+                                                    <td>{{$worker->naughty}}</td>
                                                 </tr>
                                                                                         
                                                 <tr>
@@ -344,7 +339,12 @@
                                                                                         
                                                 <tr>
                                                     <th> مستقطعات أخرى</th>
-                                                    <td>{{$worker->otherPays}}</td>
+                                                    <td>{{$worker->otherMoney}}</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <th> تفسير المستقطعات الاخرى</th>
+                                                    <td>{{$worker->otherMoneyExplanation}}</td>
                                                 </tr>
                                                 
                                             </tbody>

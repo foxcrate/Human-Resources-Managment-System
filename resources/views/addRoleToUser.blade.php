@@ -3,18 +3,9 @@
     <h5 class="card-title">{{$user->name}}</h5>
     <form action="{{ url('/users/addRoleToUser',$user->id) }}" method="post">
         @csrf
-        <!--<div class="form-group">
-            <label>أدخل الصلاحية الجديدة</label>
-            @foreach($allRoles as $role)
-            <div class=" form-switch ">
-                <label for="">{{$role->name}}</label>
-                <input class="form-check-input px-5" type="checkbox" value="add" name="userRoles[]" >                    
-            </div>
-            @endforeach
-        </div>-->
 
         <div class="form-group">
-            <label>أدخل الصلاحية الجديدة</label>
+            <label>أدخل الرتبة الجديدة</label>
             <table class="table">
                 <thead class="thead-light">
 

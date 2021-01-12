@@ -5,6 +5,9 @@
         <div class="form-group">
             <label>أدخل الإسم</label>
             <input name="roleName" type="text" class="form-control"  placeholder="أدخل الإسم" >
+            @error('roleName')
+            <div class="alert-warning">{{$errors->first('roleName')}}</div>
+            @enderror
         </div>
         <br>
         <input type="submit" class="btn btn-info" value="حفظ">

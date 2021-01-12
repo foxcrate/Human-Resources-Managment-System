@@ -1,8 +1,10 @@
 <?php
+
 namespace App\Traits;
 
 use App\Models\Role;
 use App\Models\Permission;
+use App\Models\Attendance;
 trait HasRolesAndPermissions
 {
     /**
@@ -21,6 +23,11 @@ trait HasRolesAndPermissions
         return $this->belongsToMany(Permission::class,'users_permissions');
     }
 
+    /*public function attendances()
+    {
+        return $this->belongsToMany(Attendance::class,'users_attendances');
+    }*/
+
     public function hasRole($role ) {
         //foreach ($roles as $role) {
             if ($this->roles->contains('name', $role)) {
@@ -31,7 +38,11 @@ trait HasRolesAndPermissions
     }
 
     protected function hasPermission($permission){
-        return (bool) $this->permissions->where('name', $permission->name)->count();
+        return (bool) $this->permissions->where('slug', $permission->slug)->count();
+    }
+
+    protected function hasPermissionTo($permission){
+       return $this->hasPermissionThroughRole($permission) || $this->hasPermission($permission);
     }
 
     public function hasPermissionThroughRole($permission){
@@ -43,12 +54,8 @@ trait HasRolesAndPermissions
         return false;
     }
 
-    protected function hasPermissionTo($permission){
-        return $this->hasPermissionThroughRole($permission) || $this->hasPermission($permission);
-    }
-
     protected function getAllPermissions(array $permissions){
-        return Permission::whereIn('name',$permissions)->get();
+        return Permission::whereIn('slug',$permissions)->get();
     }
 
     public function givePermissionsTo(... $permissions){

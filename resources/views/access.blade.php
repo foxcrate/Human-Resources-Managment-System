@@ -1,62 +1,48 @@
-<div class="card md-3" dir="rtl">
-    <div class="card-body">
-        <h5 class="card-title">صلاحيات الموظفين</h5>
-        <p class="card-text">يمكنك تحديد صلاحية الموظف بالضغط على الصلاحية المطلوبة</p>
-        <table class="table table-bordered">
-            <thead class="thead-light">
-                <tr>
-                    <th scope="col"></th>
-                    <th scope="col">إضافة</th>
-                    <th scope="col"> مسح</th>
-                    <th scope="col">تعديل بيانات</th>
-                    <th scope="col">عرض تفاصيل</th>
-                    <th scope="col"></th>
-
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($users as $user) 
-                
-                <form action="{{ url('/saveAccess/'.$user->id) }}" method="post">
-                    
-                    @csrf
-                    
-                    <tr>
-                        <th scope="row">{{$user->name}}</th>
-
-                        <td >
-                            <div class=" form-switch ">
-                                <input class="form-check-input px-5" type="checkbox" value="add" name="choice[]" {{ in_array("add",explode(",",$user->access))? "checked":"" }} >
-                                
-                            </div>
-                        </td>
-
-                        <td>    
-                            <div class=" form-switch ">
-                                <input class="form-check-input px-5" type="checkbox" value="remove" name="choice[]" {{ in_array("remove",explode(",",$user->access))? "checked":"" }}>
-                            </div>
-                        </td>
-
-                        <td>
-                            <div class=" form-switch">
-                                <input class="form-check-input px-5" type="checkbox" value="edit" name="choice[]" {{ in_array("edit",explode(",",$user->access))? "checked":"" }}>
-                            </div>
-                        </td>
-
-                        <td>
-                            <div class=" form-switch">
-                                <input class="form-check-input px-5" type="checkbox" value="details" name="choice[]" {{ in_array("details",explode(",",$user->access))? "checked":"" }} >
-                            </div>
-                        </td>
-
-                        <td>
-                            <input type="submit" value="حفظ" class="btn btn-primary m-7 py-1">
-                        </td>
-                    </tr>
-                </form>
-                
-                @endforeach
-            </tbody>
-        </table>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<body>
+   
+    <div class="table-responsive">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="text-info"><i class="fa fa-key"></i>الصلاحيات المتوفرة </h1>
+                    <section class="float-right">
+                        <a href="{{ url('/access/toAddPermission') }}" class="btn btn-outline-primary">إضافة صلاحية</a>
+                    </section>
+                </div>
+                <div class="card-block table-border-style">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>الصلاحية</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($permissions as $permission)
+                                <tr>
+                                    <td>{{ $permission->name }}</td>
+                                    <td class="table-form">
+                                        <a href="{{ url('/access/Details',$permission->id) }}" class="btn btn-info pull-left" style="margin-right: 3px;">تفاصيل</a>
+                                        <a href="{{ url('/access/Remove',$permission->name) }}" class="btn btn-sm btn-danger" style="margin-right: 3px;">مسح</a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+
+</body>
+</html>

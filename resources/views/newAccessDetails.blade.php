@@ -21,7 +21,7 @@
             </tbody>
         </table>
         <section class="float-right">
-            <!--<a href="{{ url('/access/toAddFunction',$permissionName) }}" class="btn btn-outline-primary">إضافة مهمة</a>-->
+            <a href="{{ url('/access/toAddFunction',$permissionName) }}" class="btn btn-outline-primary">إضافة مهمة</a>
         </section>
     </div>
 </div>

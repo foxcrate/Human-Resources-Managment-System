@@ -18,6 +18,30 @@
 
     <link rel="stylesheet" type="text/css" href="../css/style.css" /> 
 
+    <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}" defer></script>
+    <!-- Fonts -->
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+
+    <!---->
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="/bower_components/Ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/dist/css/AdminLTE.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="/bower_components/bootstrap-daterangepicker/daterangepicker.css">
+    <!-- Bootstrap time Picker -->
+    <link rel="stylesheet" href="/plugins/timepicker/bootstrap-timepicker.min.css">
+    <!-- bootstrap datepicker -->
+    <link rel="stylesheet" href="/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <!---->
+
     <style>
             body {
         overflow-x: hidden;
@@ -80,20 +104,84 @@
         @if($layout=="index")
             <div class="container-fluid mt-4">
               <div class="row justify-content-center">
-                <section class="col-md-11">
+                <section class="col-md-12">
                   @include("workersList")
                 </section>
               </div>
             </div>
+            
+        @elseif($layout=="addNewUser")
+          <div class="container-fluid mt-4">
+              <div class="row justify-content-center">
+                <section class="col-md-11">
+                  @include("addNewUser")
+                </section>
+              </div>
+          </div>
+
+        @elseif($layout=="changePassword")
+          <div class="container-fluid mt-4">
+              <div class="row justify-content-center">
+                <section class="col-md-11">
+                  @include("changePassword")
+                </section>
+              </div>
+          </div>
+
+          
+        @elseif($layout=="changePasswordForm")
+          <div class="container-fluid mt-4">
+              <div class="row justify-content-center">
+                <section class="col-md-11">
+                  @include("changePasswordForm")
+                </section>
+              </div>
+          </div>
+
+        @elseif($layout=="setCompanyMail")
+          <div class="container-fluid mt-4">
+              <div class="row justify-content-center">
+                <section class="col-md-11">
+                  @include("setCompanyMail")
+                </section>
+              </div>
+          </div>
+        
+        @elseif($layout=="emailSalaryDetails")
+          <div class="container-fluid mt-4">
+              <div class="row justify-content-center">
+                <section class="col-md-11">
+                  @include("emailSalaryDetails")
+                </section>
+              </div>
+          </div>
+
+        @elseif($layout=="attend")
+          <div class="container-fluid mt-4">
+              <div class="row justify-content-center">
+                <section class="col-md-11">
+                  @include("attend")
+                </section>
+              </div>
+          </div>
+
+        @elseif($layout=="attendanceDetails")
+          <div class="container-fluid mt-4">
+              <div class="row justify-content-center">
+                <section class="col-md-11">
+                  @include("attendanceDetails")
+                </section>
+              </div>
+          </div>
 
         @elseif($layout=="users")
-        <div class="container-fluid mt-4">
-          <div class="row justify-content-center">
-            <section class="col-md-11">
-              @include("usersList")
-            </section>
+          <div class="container-fluid mt-4">
+            <div class="row justify-content-center">
+              <section class="col-md-11">
+                @include("usersList")
+              </section>
+            </div>
           </div>
-        </div>
 
         @elseif($layout=="addRoleToUser")
           <div class="container-fluid mt-4">
@@ -111,7 +199,7 @@
           <div class="container-fluid mt-4">
               <div class="row justify-content-center">
                 <section class="col-md-7">
-                  @include("newAccess")
+                  @include("access")
                 </section>
                 <section class="col-md-5">
                   @include("addFunctionToPermission")
@@ -152,20 +240,20 @@
               </div>
             </div>        
 
-        @elseif($layout=="newAccess")
+        @elseif($layout=="access")
           <div class="container-fluid mt-4">
             <div class="row justify-content-center">
               <section class="col-md-11">
-                @include("newAccess")
+                @include("access")
               </section>
             </div>
-        </div>
+          </div>
 
         @elseif($layout=="newAccessDetails")
           <div class="container-fluid mt-4">
             <div class="row justify-content-center">
               <section class="col-md-7">
-                @include("newAccess")
+                @include("access")
               </section>
               <section class="col-md-5">
                 @include("newAccessDetails")
@@ -199,48 +287,19 @@
 
         @elseif($layout=="dashboard")
           <div class="container-fluid mt-4">
-            <div class="row">
+            <div class="row justify-content-center">
+              <section class="col-md-11">
+                @include("dashboard")
+                </section>
+            </div>
+          </div>
 
-              <div class="col-3 col-m-6 col-sm-6">
-                  <div class="counter bg-primary">
-                      <p>
-                          <i class="fas fa-tasks"></i>
-                      </p>
-                      <h3>{{count($workers)}}</h3>
-                      <p>موظف</p>
-                  </div>
-              </div>
-
-              <div class="col-3 col-m-6 col-sm-6">
-                  <div class="counter bg-warning">
-                      <p>
-                          <i class="fas fa-spinner"></i>
-                      </p>
-                      <h3>100+</h3>
-                      <p>In progress</p>
-                  </div>
-              </div>
-
-              <div class="col-3 col-m-6 col-sm-6">
-                  <div class="counter bg-success">
-                      <p>
-                          <i class="fas fa-check-circle"></i>
-                      </p>
-                      <h3>100+</h3>
-                      <p>Completed</p>
-                  </div>
-              </div>
-
-              <div class="col-3 col-m-6 col-sm-6">
-                  <div class="counter bg-danger">
-                      <p>
-                          <i class="fas fa-bug"></i>
-                      </p>
-                      <h3>100+</h3>
-                      <p>Issues</p>
-                  </div>
-              </div>
-
+        @elseif($layout=="todaySalaries")
+          <div class="container-fluid mt-4">
+            <div class="row justify-content-center">
+              <section class="col-md-11">
+                @include("todaySalaries")
+                </section>
             </div>
           </div>
 
@@ -270,6 +329,15 @@
                 </section>
               </div>
             </div>
+
+        @elseif($layout=="indexlw")
+          <div class="container-fluid mt-4">
+            <div class="row justify-content-center">
+              <section class="col-md-11">
+                @include("workersList")
+              </section>
+            </div>
+          </div>
 
         @elseif($layout=="show")
             <div class="container-fluid mt-4 " id="show-form">
@@ -315,13 +383,38 @@
             </div>
 
         @elseif($layout=="showAccess")
-        <div class="container-fluid mt-4">
-          <div class="row justify-content-center">
-            <section class="col-md-11">
-              @include("access")
-            </section>
+          <div class="container-fluid mt-4">
+            <div class="row justify-content-center">
+              <section class="col-md-11">
+                @include("access")
+              </section>
+            </div>
           </div>
-        </div>
+
+        @elseif($layout=="toStatistics")
+          <div class="container-fluid mt-4">
+            <div class="row justify-content-center">
+              <section class="col-md-12">
+                @include("statistics")
+              </section>
+            </div>
+          </div>
+
+        @elseif($layout=="statisticsInformation")
+          <div class="container-fluid mt-4">
+            <div class="row justify-content-center">
+              <div class='row'>
+                <section class="col-md-12">
+                  @include("statistics")
+                </section>
+              </div>
+              <div class='row'>
+                <section class="col-md-12">
+                  @include("statisticsInformation")
+                </section>
+              </div>
+            </div>
+          </div>
 
         @endif
 
