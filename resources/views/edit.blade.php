@@ -133,19 +133,45 @@
                 <div class="alert-warning">{{$errors->first('shouldLeaveTime')}}</div>
                 @enderror
             </div>
-            
-            <div class="form-group">
-                <label>أيام العمل الواجبة شهريا </label>
-                <input value={{$worker->shouldWorkedDays}} name="shouldWorkedDays" type="number" class="form-control"  placeholder="أدخل أيام العمل الواجبة شهريا">
-                @error('shouldWorkedDays')
-                <div class="alert-warning">{{$errors->first('shouldWorkedDays')}}</div>
+
+            <div class="form-group my-3">
+                <label>أجازات الأسبوع </label>
+
+                <div class="input-group-text">
+                <div >
+                    <label for="1">السبت</label>
+                    <input id="1" type="checkbox" value="Saturday" name="holidays[]">
+
+                    <label for="2" >الحد</label>
+                    <input  id="2" type="checkbox" value="Sunday" name="holidays[]">
+
+                    <label for="3">الاتنين</label>
+                    <input id="3" type="checkbox" value="Monday" name="holidays[]">
+
+                    <label for="4">الثلاثاء</label>
+                    <input id="4" type="checkbox" value="Tuesday" name="holidays[]">
+
+                    <label for="5">الأربعاء</label>
+                    <input id="5" type="checkbox" value="Wednesday" name="holidays[]">
+
+                    <label for="6">الخميس</label>
+                    <input id="6" type="checkbox" value="Thursday" name="holidays[]">
+
+                    <label for="7">الجمعة</label>
+                    <input id="7" type="checkbox" value="Friday" name="holidays[]">
+                </div>
+                </div>
+
+                @error('holidays')
+                <div class="alert-warning">{{$errors->first('holidays')}}</div>
                 @enderror
             </div>
+
             <div class="form-group">
-                <label>ساعات العمل الواجبة شهريا</label>
-                <input value={{$worker->shouldWorkedHours}} name="shouldWorkedHours" type="number" step="any" class="form-control"  placeholder="أدخل ساعات العمل الواجبة شهريا ">
-                @error('shouldWorkedHours')
-                <div class="alert-warning">{{$errors->first('shouldWorkedHours')}}</div>
+                <label>ساعات العمل الواجبة يوميا</label>
+                <input value={{$worker->dailyShouldWorkedHours}} name="dailyShouldWorkedHours" type="number" step="any" class="form-control"  placeholder="أدخل ساعات العمل الواجبة شهريا ">
+                @error('dailyShouldWorkedHours')
+                <div class="alert-warning">{{$errors->first('dailyShouldWorkedHours')}}</div>
                 @enderror
             </div>
             <div class="form-group">

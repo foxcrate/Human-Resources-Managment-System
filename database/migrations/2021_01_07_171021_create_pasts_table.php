@@ -18,11 +18,14 @@ class CreatePastsTable extends Migration
             
             $table->date('date');
             $table->integer('p_totalSalary');
-            $table->decimal('p_hoursLated',5,2);
             $table->integer('p_daysAttended');
             $table->integer('p_daysAbsented');
+
+            $table->integer('p_monthShouldWorkedDays'); ////
+
             $table->decimal('p_hoursWorked', 5, 2);
             $table->decimal('p_hoursNotWorked', 5, 2);
+            $table->decimal('p_hoursLated',5,2);
 
             $table->integer('p_rewards')->default(0);
             $table->integer('p_incentives')->default(0);

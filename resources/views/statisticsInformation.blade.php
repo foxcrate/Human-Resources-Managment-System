@@ -1,4 +1,4 @@
-<div class="card md-3 mt-5" >
+<div class="card md-5 mt-5" >
     <div class="card-body" style="padding-bottom: 1px;">
         <h5 class="card-title"> الإحصائات من "{{$fromDate}}" إلى "{{$toDate}}"</h5>
         <!--<p class="card-text">تجد هنا كل المعلومات المفصلة عن العاملين في شركة الباز للبرمجيات</p>-->
@@ -25,5 +25,7 @@
             @endfor
             </tbody>
         </table>
+
     </div>
 </div>
+

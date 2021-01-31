@@ -79,7 +79,7 @@
                 <div class="inner">
 
                     <!--<h3> 90 <sup style='font-size: 20px'>%</sup></h3>-->
-                    <h3>{{$todaySalaryWorkers}}</h3>
+                    <h3>{{$totalWorkers}}</h3>
                     <p>موظف معاد قبضه اليوم</p>
                 </div>
                 <div class="icon">
@@ -110,7 +110,7 @@
             <!-- small box -->
             <div class="small-box bg-red">
                 <div class="inner">
-                    <h4>{{$todaySalaries}} جنية</h4>
+                    <h4>{{$totalSalaries}} جنية</h4>
 
                     <p>إجمالي المرتبات المستحقة اليوم</p>
                 </div>

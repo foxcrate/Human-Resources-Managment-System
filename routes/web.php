@@ -20,7 +20,8 @@ use App\Models\User;
 Route::get('/addNewUser',"HomeController@addNewUser");
 Route::post('/addNewUser',"HomeController@addNewUserPOST");
 
-Auth::routes(['register' => false]);
+Auth::routes();
+//['register' => false]
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -117,6 +118,13 @@ Route::get('/attendanceDetails',"WorkerController@attendanceDetails");
 
 Route::get('/toStatistics',"WorkerController@toStatistics");
 Route::post('/statisticsDetails',"WorkerController@statisticsDetails");
+Route::get('/toSingleStatistics',"WorkerController@toSingleStatistics");
+Route::post('/singleStatisticsDetails',"WorkerController@singleStatisticsDetails");
+
+Route::post('/changeAttendance55',"WorkerController@changeAttendance55")->name('changeAttendance55');
+Route::post('/changeAttendance/{workerID}/{attendanceID}',"WorkerController@changeAttendance")->name('changeAttendance');
+Route::get('/changeAttendance2/{fromDate}',"WorkerController@changeAttendance2");
+
 
 Route::get('/bst',"WorkerController@attendbst");
 
@@ -144,3 +152,6 @@ Route::get('/emailSalaryDetails/{id}',function($id){
     Mail::to($worker1->email)->send(new elBaz('printSalaryDetails',$id));
     return redirect()->back();
 });
+
+Route::get('/nexmo',"NexmoController@show")->name('nexmo');
+Route::post('/nexmo',"NexmoController@verify")->name('nexmo');

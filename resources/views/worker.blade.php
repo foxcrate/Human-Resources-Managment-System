@@ -16,7 +16,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
 
-    <link rel="stylesheet" type="text/css" href="../css/style.css" /> 
+    <link rel="stylesheet" type="text/css" href="{{asset('css/style.css')}}" /> 
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -25,69 +25,22 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!---->
-    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{asset('/bower_components/bootstrap/dist/css/bootstrap.min.css')}}">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{asset('/bower_components/font-awesome/css/font-awesome.min.css')}}">
     <!-- Ionicons -->
-    <link rel="stylesheet" href="/bower_components/Ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="{{asset('/bower_components/Ionicons/css/ionicons.min.css')}}">
     <!-- Theme style -->
-    <link rel="stylesheet" href="/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="{{asset('/dist/css/AdminLTE.min.css')}}">
     <!-- DataTables -->
-    <link rel="stylesheet" href="/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="{{asset('/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css')}}">
     <!-- daterange picker -->
-    <link rel="stylesheet" href="/bower_components/bootstrap-daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" href="{{asset('/bower_components/bootstrap-daterangepicker/daterangepicker.css')}}">
     <!-- Bootstrap time Picker -->
-    <link rel="stylesheet" href="/plugins/timepicker/bootstrap-timepicker.min.css">
+    <link rel="stylesheet" href="{{asset('/plugins/timepicker/bootstrap-timepicker.min.css')}}">
     <!-- bootstrap datepicker -->
-    <link rel="stylesheet" href="/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="{{asset('/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css')}}">
     <!---->
-
-    <style>
-            body {
-        overflow-x: hidden;
-        }
-
-        #sidebar-wrapper {
-        min-height: 100vh;
-        margin-left: -15rem;
-        -webkit-transition: margin .25s ease-out;
-        -moz-transition: margin .25s ease-out;
-        -o-transition: margin .25s ease-out;
-        transition: margin .25s ease-out;
-        }
-
-        #sidebar-wrapper .sidebar-heading {
-        padding: 0.875rem 1.25rem;
-        font-size: 1.2rem;
-        }
-
-        #sidebar-wrapper .list-group {
-        width: 15rem;
-        }
-
-        #page-content-wrapper {
-        min-width: 100vw;
-        }
-
-        #wrapper.toggled #sidebar-wrapper {
-        margin-left: 0;
-        }
-
-        @media (min-width: 768px) {
-        #sidebar-wrapper {
-            margin-left: 0;
-        }
-
-        #page-content-wrapper {
-            min-width: 0;
-            width: 100%;
-        }
-
-        #wrapper.toggled #sidebar-wrapper {
-            margin-left: -15rem;
-        }
-        }
-    </style>
 
     <title>Human Resource Managment System</title>
   </head>
@@ -168,7 +121,7 @@
         @elseif($layout=="attendanceDetails")
           <div class="container-fluid mt-4">
               <div class="row justify-content-center">
-                <section class="col-md-11">
+                <section class="col-md-12">
                   @include("attendanceDetails")
                 </section>
               </div>
@@ -371,11 +324,11 @@
         @elseif($layout=="edit")
             <div class="container-fluid mt-4">
               <div class="row">
-                <section class="col-md-7">
+                <section class="col-md-6">
                   @include("workersList")
                 </section>
 
-                <section class="col-md-5">
+                <section class="col-md-6">
                 @include("edit")
                 </section>
 
@@ -416,8 +369,32 @@
             </div>
           </div>
 
-        @endif
+        @elseif($layout=="toSingleStatistics")
+          <div class="container-fluid mt-4">
+            <div class="row justify-content-center">
+              <section class="col-md-12">
+                @include("singleStatistics")
+              </section>
+            </div>
+          </div>
 
+        @elseif($layout=="singleStatisticsInformation")
+          <div class="container-fluid mt-4">
+            <div class="row justify-content-center">
+              <div class='row'>
+                <section class="col-md-12">
+                  @include("singleStatistics")
+                </section>
+              </div>
+              <div class='row'>
+                <section class="col-md-12">
+                  @include("singleStatisticsInformation")
+                </section>
+              </div>
+            </div>
+          </div>
+
+        @endif
       </div>
     </div>
 

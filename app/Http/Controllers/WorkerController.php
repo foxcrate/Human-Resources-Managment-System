@@ -496,45 +496,49 @@ class WorkerController extends Controller
 
     public function calculateSalary($id){
         $worker1=Worker::find($id);
+        $current1= Carbon::now();
+        $current1->subDay();
+        $lastMonthDate=$current1->copy();
+        $lastMonthDate->subMonth();
         $worker1Attendances=$worker1->attendances;
-        $current = Carbon::now();
+        
 
         $founded=false;
         $workerPasts=$worker1->pasts;
         foreach($workerPasts as $past){
-            if($past->date == $current->toDateString()){
+            if($past->date == $current1->toDateString()){
                 $founded=true;
                 break;
             }
         }
+        
         if($founded==false){
-            //$current = Carbon::now();
             $shouldArriveTime=new Carbon($worker1->shouldArriveTime);
             $shouldLeaveTime=new Carbon($worker1->shouldLeaveTime);
 
             $daysAttendedByWorker=0;
+            $monthShouldWorkedDays=0;
             $hoursWorkedByWorker=0;
             $hoursLatedByWorker=0;
             $worker1->daysAbsented=0;
             $worker1->hoursNotWorked=0;
 
-            $pastMonthDate=new Carbon($current->subMonth());
-            //dd($pastMonthDate); 
 
             foreach($worker1Attendances as $attendance ){
-                $ddd=new Carbon($attendance->date);
-                $ttt=new Carbon($attendance->arriveTime);
-                $ttt2=new Carbon($attendance->leaveTime);
+                $attendanceDate=new Carbon($attendance->date);
+                if($attendanceDate >= $lastMonthDate && $attendanceDate <= $current1){
+                
+                    $ddd = $attendanceDate;
+                    $ttt=new Carbon($attendance->arriveTime);
+                    $ttt2=new Carbon($attendance->leaveTime);
 
-                //if($ddd->month==$current->month){
-                if($pastMonthDate < $ddd ){
-                    //dd("alo");
                     //$worker1->daysAttended//
-                    //$worker1->daysAttended=$worker1->daysAttended+1;
-                    $daysAttendedByWorker ++;
+                    $monthShouldWorkedDays++;
+                    if($attendance->come = 1){
+                        $daysAttendedByWorker ++;
+                    }
 
                     //$worker1->hoursWorked//
-                    //$worker1->hoursWorked +=$attendance->hoursWorked;
                     $hoursWorkedByWorker += $attendance->hoursWorked;
 
                     //$worker1->hoursLated//
@@ -550,6 +554,7 @@ class WorkerController extends Controller
                         //$worker1->hoursLated+=$diffInLeave;
                         $hoursLatedByWorker += $diffInLeave;
                     }
+                    
                 }
             }
             $worker1->daysAttended=$daysAttendedByWorker;
@@ -558,12 +563,14 @@ class WorkerController extends Controller
 
             $worker1->save();
 
-            if($worker1->shouldWorkedDays > $worker1->daysAttended){
-                $worker1->daysAbsented=$worker1->shouldWorkedDays-
+            $monthShouldWorkedHours = $worker1->dailyShouldWorkedHours * $monthShouldWorkedDays;
+
+            if($monthShouldWorkedDays > $worker1->daysAttended){
+                $worker1->daysAbsented=$monthShouldWorkedDays-
                     $worker1->daysAttended;
             }
-            if($worker1->shouldWorkedHours > $worker1->hoursWorked){
-                $worker1->hoursNotWorked=$worker1->shouldWorkedHours-
+            if($monthShouldWorkedHours > $worker1->hoursWorked){
+                $worker1->hoursNotWorked=$monthShouldWorkedHours-
                     $worker1->hoursWorked;
             }
             $worker1->save();
@@ -583,9 +590,11 @@ class WorkerController extends Controller
                 ($worker1->taxesPay)-($worker1->otherPay);
             $worker1->save();
 
+            $current= Carbon::now();
             $past1=new Past();
             $past1->date=$current->toDateString();
             $past1->p_totalSalary = $worker1->totalSalary;
+            $past1->p_monthShouldWorkedDays= $monthShouldWorkedDays;
             $past1->p_hoursLated=$worker1->hoursLated;
             $past1->p_daysAttended=$worker1->daysAttended;
             $past1->p_daysAbsented=$worker1->daysAbsented;
@@ -602,15 +611,78 @@ class WorkerController extends Controller
 
             $worker1->pasts()->attach($past1);
 
-            ////$worker1->salaryToTake=0;
-            //$worker1->daysAbsented=0;
-            //$worker1->hoursNotWorked=0;
-            //$worker1->daysAttended=0;
-            //$worker1->hoursLated=0;
-            //$worker1->hoursWorked=0;
-
             $worker1->save();
         }
+    }
+
+    public function dashboard(){
+        //dd(Auth::user()->userType);
+        //if( Auth::user()->userType==0){
+            $workers=Worker::all();
+            //dd($workers);
+            $current=Carbon::now();
+            $currentDay=$current->day;
+            $currentMonth=$current->month;
+            $currentYear=$current->year;
+            
+            foreach($workers as $worker){
+                //dd($worker);
+                $founded=false;
+                $workerPasts=$worker->pasts;
+                
+
+                $salaryDay= 14; //+1;
+                if($currentDay == $salaryDay){
+
+                    foreach($workerPasts as $past){
+                        if($past->date == $current->toDateString()){
+                            //dd("alo");
+                            $founded=true;
+                            break;
+                        }
+                    }
+                    if(! $founded){
+                        self::calculateSalary($worker->id);
+                        self::makeAttendances($worker->id);
+                    }
+                } 
+            }
+
+            $totalWorkers=0;
+            $totalSalaries=0;
+
+            foreach($workers as $worker){
+                $totalWorkers++;
+                $totalSalaries += $worker->salaryToTake;
+            }
+            return view('worker',['workers'=>$workers, 'totalWorkers'=>$totalWorkers, 'totalSalaries'=>$totalSalaries, "layout"=>"dashboard"]);
+        //}
+        //elseif( Auth::user()->userType==1){
+            //dd("Aloooo");
+        //}
+    }
+
+    public function makeAttendances($id){
+        $worker=Worker::find($id);
+        $holidays=explode(',',$worker->holidays);
+        $current=Carbon::now();
+        $dateNextMonth=$current->copy();
+        $dateNextMonth->addMonth();
+        //$current->addDay();
+
+        while($current < $dateNextMonth){ //=
+            if( ! in_array($current->format('l'),$holidays) ){
+                $attendance=new Attendance();
+                $attendance->date=$current->toDateString();
+                $attendance->arriveTime='11:11';
+                $attendance->leaveTime='11:11';
+                $attendance->save();
+                $worker->attendances()->attach($attendance);
+            }
+            $current->addDay();
+        }
+        //dd('Done');
+
     }
 
     public function addAttend($id){
@@ -626,15 +698,20 @@ class WorkerController extends Controller
                 }
             }
         }
+
         if(in_array("addAttendance",$allFunctions)){
-            $worker1=Worker::find($id);
-            $current = Carbon::now();
-            $attend1= new Attendance();
-            $attend1->date=$current->toDateString();
-            $attend1->arriveTime=$current->toTimeString();
-            $attend1->leaveTime=$current->toTimeString();
-            $attend1->save();
-            $worker1->attendances()->attach($attend1);
+            $worker=Worker::find($id);
+            $attendances=$worker->attendances;
+            $current=Carbon::now();
+            foreach($attendances as $attendance){
+                if($attendance->date == $current->toDateString()){
+                    //$attendance->come=1;
+                    $attendance->arriveTime=$current->toTimeString();
+                    //$attendance->leaveTime=$current->toTimeString();
+                    $attendance->save();
+                }
+            }
+            
             return redirect()->back();
         }
         return redirect()->back();
@@ -669,29 +746,6 @@ class WorkerController extends Controller
                     $wa->save();
                     break;
                 }
-            }
-
-            $workerStartDate=new Carbon($worker1->workStartDate);
-
-            $currentDay=$current->day;
-            $currentMonth=$current->month;
-            $currentYear=$current->year;
-
-            //$workerDay=$workerStartDate->day;
-            $workerMonth=$workerStartDate->month;
-            $workerYear=$workerStartDate->year;
-
-            $workerDay=11;
-
-            if($currentDay==$workerDay){
-                //if($currentMonth==$workerMonth){
-                    //if($currentYear != $workerYear){
-                        //self::calculateSalary($worker1->id);
-                    //}
-                //}
-                //else{
-                    //////////////////////self::calculateSalary($worker1->id);
-                //}
             }
 
             return redirect()->back();
@@ -739,11 +793,12 @@ class WorkerController extends Controller
             //dd($worker1->attendances);
             //dd($worker1);
             //$current=Carbon::now();
-            $current=new Carbon('2020-12-12');
+            $current=new Carbon('2020-12-14');
             //dd($current->subMonth());
             $date=$current->toDateString();
             $time1=new Carbon('8:00');
-            $time2=new Carbon('5:00');
+            $time2=new Carbon('17:00');
+            //dd("Alo");
             for($i=0;$i<20;$i++){
                 
                 $date=$current->toDateString();
@@ -757,6 +812,34 @@ class WorkerController extends Controller
                 $worker1->attendances()->attach($attend1);
                 $current->addDay();
             }
+
+            //dd($worker1->attendances);
+
+            $worker2=Worker::find(2);
+            //dd($worker1->attendances);
+            //dd($worker1);
+            //$current=Carbon::now();
+            $current2=new Carbon('2020-12-14');
+            //dd($current->subMonth());
+            $date2=$current2->toDateString();
+            $time12=new Carbon('8:00');
+            $time22=new Carbon('17:00');
+            for($i=0;$i<16;$i++){
+                
+                $date2=$current2->toDateString();
+                $attend2=new Attendance();
+                $attend2->date=$date2;
+                $attend2->arriveTime=$time12;
+                $attend2->leaveTime=$time22;
+                $attend2->come=1;
+                $attend2->hoursWorked=9.0;
+                $attend2->save();
+                $worker2->attendances()->attach($attend2);
+                $current2->addDay();
+            }
+
+            //dd($worker2->attendances);
+            /*
             /////////////////////////////////////
                 $date=new Carbon('2021-1-10');
                 $attend1=new Attendance();
@@ -778,7 +861,7 @@ class WorkerController extends Controller
                 $attend1->save();
                 $worker1->attendances()->attach($attend1);
             /////////////////////////////////////
-            dd("done");
+            dd("done");*/
         }
         
         {
@@ -792,68 +875,24 @@ class WorkerController extends Controller
             dd($workerAttendances);*/
         }
 
+        /*
+            $current=new Carbon('20-1-2020');
+            $dateNextMonth=$current->copy();
+            $dateNextMonth->addMonth();
+            $current->addDay();
+            $counter=0;
+            $days=array();
+            while($current <= $dateNextMonth){
+                //if($current->format('l') != 'Friday' && $current->format('l') != 'Saturday'){
+                    $counter ++;
+                    array_push($days,$counter."-".$current->format('l'));
+                //}
+                $current->addDay();
+            }
+        */
 
+        //self::makeAttendances(1);        
         
-    }
-
-    public function dashboard(){
-        //dd(Auth::user()->userType);
-        //if( Auth::user()->userType==0){
-            $workers=Worker::all();
-            //dd($workers);
-            $current=Carbon::now();
-            $currentDay=$current->day;
-            $currentMonth=$current->month;
-            $currentYear=$current->year;
-            
-            foreach($workers as $worker){
-                //dd($worker);
-                $founded=false;
-                $workerPasts=$worker->pasts;
-                foreach($workerPasts as $past){
-                    if($past->date == $current->toDateString()){
-                        //dd("alo");
-                        $founded=true;
-                        break;
-                    }
-                }
-                if($founded){
-                    continue;
-                }
-                $workerStartDate= new Carbon($worker->workStartDate);
-                
-                //$workerDay=$workerStartDate->day;
-                $workerMonth=$workerStartDate->month;
-                $workerYear=$workerStartDate->year;
-
-                $workerDay=11;
-                if($currentDay==$workerDay){
-                   // if($currentMonth==$workerMonth){
-                        //if($currentYear==$workerYear){
-                            //continue;
-                        //}
-                    //dd($worker);
-                   // }
-                    self::calculateSalary($worker->id);
-                }
-            }
-
-            $todaySalaryWorkers=0;
-            $todaySalaries=0;
-
-            foreach($workers as $worker){
-            $workerStartDate= new Carbon($worker->workStartDate);
-            $workerDay=$workerStartDate->day;
-                if($workerDay==$currentDay ){
-                    $todaySalaryWorkers++;
-                    $todaySalaries += $worker->salaryToTake;
-                }
-            }
-            return view('worker',['workers'=>$workers, 'todaySalaryWorkers'=>$todaySalaryWorkers, 'todaySalaries'=>$todaySalaries, "layout"=>"dashboard"]);
-        //}
-        //elseif( Auth::user()->userType==1){
-            //dd("Aloooo");
-        //}
     }
 
     public function toCompanyMail(){
@@ -972,33 +1011,6 @@ class WorkerController extends Controller
         }
         return redirect()->back();
     }
-
- 
-  /*  
-    public function showAccess(){
-        $users=User::all();
-        $usersAccess=array();
-        foreach($users as $user){
-            $a=explode(",",$user->access);
-            array_push($usersAccess,$a);
-        }
-        return view('worker',['users'=>$users,'usersAccess'=>$usersAccess,"layout"=>"showAccess"]);
-    }
-
-    public function saveAccess(Request $request,$id){
-        $user1=User::find($id);
-        //dd($request->choice);
-        if($request->choice==[]){
-            $user1->access='hello';
-        }
-        else{
-            $user1->access=implode(",",$request->choice);
-        }
-        
-        $user1->save();
-        return  redirect('/showAccess');
-    }*/
-
 
     public function index(){
         $roles=Auth::user()->roles;
@@ -1157,8 +1169,7 @@ class WorkerController extends Controller
             'hourPay' => ['required'],
             'shouldArriveTime' => ['required'],
             'shouldLeaveTime' => ['required'],
-            'shouldWorkedDays' => ['required'],
-            'shouldWorkedHours' => ['required'],
+            'dailyShouldWorkedHours' => ['required'],
             'basicSalary' => ['required'],
             'attendanceCompensation' => ['required'],
             'orderCompensation' => ['required'],
@@ -1225,8 +1236,10 @@ class WorkerController extends Controller
 
             $worker1->shouldArriveTime =request("shouldArriveTime");
             $worker1->shouldLeaveTime =request("shouldLeaveTime");
-            $worker1->shouldWorkedDays =request("shouldWorkedDays");
-            $worker1->shouldWorkedHours =request("shouldWorkedHours");
+
+            $worker1->holidays = implode(",",request("holidays"));
+
+            $worker1->dailyShouldWorkedHours =request("dailyShouldWorkedHours");
 
             $worker1->basicSalary =request("basicSalary");
 
@@ -1248,21 +1261,24 @@ class WorkerController extends Controller
             $worker1->insurancePay =request("insurancePay");
             $worker1->taxesPay =request("taxesPay");
             $worker1->save();
-
-            /*///dd($worker1->workStartDate);
-            $dDate=$worker1->workStartDate;
-            //dd($dDate);
-            $dTime=date('H:i:s');
-            for($i=0;$i<30;$i++){
-                $attend1= new Attendance();
-                $attend1->date=$dDate;
-                $attend1->arriveTime=$dTime;
-                $attend1->leaveTime=$dTime;
-                $attend1->save();
-                $worker1->attendances()->attach($attend1);
-                $dDate=date('Y-m-d', strtotime($dDate. ' + 1 days'));
-            }*/
-
+            //////////////////////////
+            $current=Carbon::now();
+            $date=$current->toDateString();
+            $time1=new Carbon('11:11');
+            $time2=new Carbon('11:11');
+            while($current->day <= 20){
+                $date=$current->toDateString();
+                $attend=new Attendance();
+                $attend->date=$date;
+                $attend->arriveTime=$time1;
+                $attend->leaveTime=$time2;
+                $attend->come=0;
+                $attend->hoursWorked=0;
+                $attend->save();
+                $worker1->attendances()->attach($attend);
+                $current->addDay();
+            }
+            /////////////////////////
             return redirect('/');
         }
         return redirect()->back();
@@ -1288,8 +1304,8 @@ class WorkerController extends Controller
             'hourPay' => ['required'],
             'shouldArriveTime' => ['required'],
             'shouldLeaveTime' => ['required'],
-            'shouldWorkedDays' => ['required'],
-            'shouldWorkedHours' => ['required'],
+            'holidays' => ['required'],
+            'dailyShouldWorkedHours' => ['required'],
             'basicSalary' => ['required'],
             'attendanceCompensation' => ['required'],
             'orderCompensation' => ['required'],
@@ -1360,8 +1376,10 @@ class WorkerController extends Controller
             $worker1->hourPay =$request->input("hourPay");
             $worker1->shouldArriveTime =$request->input("shouldArriveTime");
             $worker1->shouldLeaveTime =$request->input("shouldLeaveTime");
-            $worker1->shouldWorkedDays =$request->input("shouldWorkedDays");
-            $worker1->shouldWorkedHours =$request->input("shouldWorkedHours");
+
+            //$worker1->holidays =$request->input("holidays");
+            $worker1->holidays = implode(",",request("holidays"));
+            $worker1->dailyShouldWorkedHours =$request->input("dailyShouldWorkedHours");
             
             $worker1->basicSalary =$request->input("basicSalary");
             $worker1->attendanceCompensation =$request->input("attendanceCompensation");
@@ -1534,6 +1552,7 @@ class WorkerController extends Controller
         
         $information=array();
         foreach($workers as $worker){
+
             $workerAttendances=$worker->attendances;
             //dd($workerAttendances);
             $workerName=$worker->name;
@@ -1542,25 +1561,94 @@ class WorkerController extends Controller
             $workerAbsentedDays=0;
             $workerLatedHours=0;
             $workerAttendedHours=0;
+            $shouldAttendedDays=0;
             //$founded=0;
             foreach($workerAttendances as $attendance){
                 $attendanceDate=new Carbon($attendance->date);
                 //dd($attendanceDate,$fromDate,$toDate);
                 if($attendanceDate >= $fromDate && $attendanceDate <= $toDate){
                     //$founded++;
-                    $workerAttendedDays++;
-                    
-                    $workerAttendedHours += $attendance->hoursWorked;
+                    $shouldAttendedDays ++;
+                    if($attendance->come == 1){
+                        $workerAttendedDays++;
+                        $workerAttendedHours += $attendance->hoursWorked;
+                    }
+                
                 }
                 
             }
-            $workerAbsentedDays=$worker->shouldWorkedDays - $workerAttendedDays;
-            $workerLatedHours=$worker->shouldWorkedHours - $workerAttendedHours;
+            $shouldWorkedHours = $shouldAttendedDays * $worker->dailyShouldWorkedHours ;
+            $workerAbsentedDays=$shouldAttendedDays - $workerAttendedDays;
+            $workerLatedHours=$shouldWorkedHours - $workerAttendedHours;
             //dd($workerAttendedDays,$workerAbsentedDays,$workerAttendedHours,$workerLatedHours);
             array_push($information, ['name'=>$worker->name,'department'=>$worker->department,'daysAttended'=>$workerAttendedDays,'daysAbsented'=>$workerAbsentedDays,'lateHours'=>$workerLatedHours]);
         }
         //dd($information);
-        return view('worker',['toDate'=>$toDate->toDateString(),'fromDate'=>$fromDate->toDateString(),'information'=>$information,'layout'=>'statisticsInformation']);
+        return view('worker',['workers'=>$workers,'toDate'=>$toDate->toDateString(),'fromDate'=>$fromDate->toDateString(),'information'=>$information,'layout'=>'statisticsInformation']);
+    }
+
+    public function toSingleStatistics(){
+    
+        return view('worker',['layout'=>'toSingleStatistics']);
+    
+    }
+
+    public function singleStatisticsDetails(Request $request){
+        $request->validate([
+            'fromDate' => ['required'],
+            'toDate' => ['required'],
+            'ID' => ['required'],
+        ]);
+
+        $worker=Worker::find(request('ID'));
+        $fromDate=new Carbon(request('fromDate'));
+        $toDate=new Carbon(request('toDate'));
+
+        $workerAttendances=$worker->attendances;
+        $information=array();
+        $workerName=$worker->name;
+        $workerDepartment=$worker->department;
+        $information=array();
+
+        foreach($workerAttendances as $attendance){
+            $attendanceDate=new Carbon($attendance->date);
+            if($attendanceDate >= $fromDate && $attendanceDate <= $toDate){
+                array_push($information,$attendance);
+            }
+
+        }
+        
+        return view('worker',['fromDate'=>$fromDate->toDateString(),'toDate'=>$toDate->toDateString(),'worker'=>$worker,'information'=>$information,'layout'=>'singleStatisticsInformation']);
+    }
+
+    public function changeAttendance(Request $request, $workerID,$attendanceID){
+        //dd($workerID,$attendanceID);
+        $attendance=Attendance::find($attendanceID);
+        $attendance->arriveTime = request('arriveTime');
+        $attendance->leaveTime = request('leaveTime');
+
+        $lt=new Carbon($attendance->leaveTime);
+        $at=new Carbon($attendance->arriveTime);
+        $hours=($lt->diffInMinutes($at))/60;
+
+        $attendance->hoursWorked =$hours;
+        $attendance->save();
+        
+        return redirect( url('/toSingleStatistics') );
+        //return redirect()->route('changeAttendance');
+    }
+    
+    public function changeAttendance55(Request $request){
+        //dd(request('attendance'));
+        $attendance=Attendance::find(request('attendanceID'));
+        //dd($attendance->date);
+        $attendance->arriveTime=request('arriveTime');
+        $attendance->leaveTime=request('leaveTime');
+        $attendance->save();
+
     }
 
 }
+
+
+//<!--  action="{{ url('/changeAttendance/'.$worker->id .'/' .$attendance->id) }}" -->

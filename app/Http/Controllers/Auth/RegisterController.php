@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Nexmo;
 
 class RegisterController extends Controller
 {
@@ -29,7 +30,8 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    //protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = '/nexmo';
 
     /**
      * Create a new controller instance.
@@ -52,6 +54,7 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'phone' => ['required','min:12', 'max:15', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -64,9 +67,16 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $verification = Nexmo::verify()->start([
+            'number'=>$data['phone'],
+            'brand'=>'Phone Verification',
+        ]);
+        session(['nexmo_request_id'=>$verification->getRequestID()]);
+
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'phone' => $data['phone'],
             'password' => Hash::make($data['password']),
         ]);
     }

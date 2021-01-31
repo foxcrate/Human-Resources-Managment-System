@@ -40,11 +40,11 @@ class CreateWorkersTable extends Migration
             $table->time('shouldLeaveTime');
             $table->decimal('hoursLated',5,2)->default(0);
 
-            $table->integer('shouldWorkedDays');
+            $table->string('holidays'); /////////////
             $table->integer('daysAttended')->default(0);
             $table->integer('daysAbsented')->default(0);
 
-            $table->decimal('shouldWorkedHours',5,2);
+            $table->decimal('dailyShouldWorkedHours',5,2); ////////
             $table->decimal('hoursWorked', 5, 2)->default(0);
             $table->decimal('hoursNotWorked', 5, 2)->default(0);
 

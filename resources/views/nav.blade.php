@@ -8,13 +8,14 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <link rel="icon" href="{{asset('/images/logo.jpg')}}" type="image/icon type">
 
 </head>
 <body dir="rtl">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <img src="/images/logo.jpg" class="img-responsive" alt="El-Baz Logo" width="90" height="90" class="d-inline-block align-top">
-        <a class="navbar-brand" href="#">شركة الباز للبرمجيات</a>
+        <img src="{{asset('/images/logo.jpg')}}" class="img-responsive" alt=" Logo" width="90" height="90" class="d-inline-block align-top">
+        <a class="navbar-brand" href="#">شركةل  </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -31,6 +32,7 @@
             <form class="form-inline my-2 my-lg-0" action="{{ url('/search') }}" method="post">
                 @csrf
                 <input class="form-control mr-sm-2" type="text" placeholder="بحث عن موظف" name="workerName" aria-label="Search">
+                
             </form>
 
             <ul class="navbar-nav mr-100" style="padding-right: 200px;" >

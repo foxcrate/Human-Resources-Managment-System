@@ -149,18 +149,46 @@
                             <div class="alert-warning">{{$errors->first('shouldLeaveTime')}}</div>
                             @enderror
                         </div>
-                        <div class="form-group">
-                            <label>أيام الواجبة شهريا</label>
-                            <input  name="shouldWorkedDays" type="number" class="form-control"  placeholder="أدخل أيام العمل الواجبة شهريا">
-                            @error('shouldWorkedDays')
-                            <div class="alert-warning">{{$errors->first('shouldWorkedDays')}}</div>
+
+                        
+                        <div class="form-group my-3">
+                            <label>أجازات الأسبوع </label>
+
+                            <div class="input-group-text">
+                            <div >
+                                <label for="1" style="margin-right:40px;" >السبت</label>
+                                <input id="1" type="checkbox" value="Saturday" name="holidays[]">
+
+                                <label for="2" style="margin-right:40px;"  >الحد</label>
+                                <input  id="2" type="checkbox" value="Sunday" name="holidays[]">
+
+                                <label for="3" style="margin-right:40px;" >الاتنين</label>
+                                <input id="3" type="checkbox" value="Monday" name="holidays[]">
+
+                                <label for="4" style="margin-right:40px;" >الثلاثاء</label>
+                                <input id="4" type="checkbox" value="Tuesday" name="holidays[]">
+
+                                <label for="5" style="margin-right:40px;" >الأربعاء</label>
+                                <input id="5" type="checkbox" value="Wednesday" name="holidays[]">
+
+                                <label for="6" style="margin-right:40px;" >الخميس</label>
+                                <input id="6" type="checkbox" value="Thursday" name="holidays[]">
+
+                                <label for="7" style="margin-right:40px;" >الجمعة</label>
+                                <input id="7" type="checkbox" value="Friday" name="holidays[]">
+                            </div>
+                            </div>
+
+                            @error('holidays')
+                            <div class="alert-warning">{{$errors->first('holidays')}}</div>
                             @enderror
                         </div>
+
                         <div class="form-group">
-                            <label>ساعات العمل الواجبة شهريا</label>
-                            <input  name="shouldWorkedHours" type="number" step="any" class="form-control"  placeholder="أدخل ساعات العمل الواجبة شهريا">
-                            @error('shouldWorkedHours')
-                            <div class="alert-warning">{{$errors->first('shouldWorkedHours')}}</div>
+                            <label>ساعات العمل الواجبة يوميا</label>
+                            <input  name="dailyShouldWorkedHours" type="number" step="any" class="form-control"  placeholder="أدخل ساعات العمل الواجبة يوميا">
+                            @error('dailyShouldWorkedHours')
+                            <div class="alert-warning">{{$errors->first('dailyShouldWorkedHours')}}</div>
                             @enderror
                         </div>
                         <div class="form-group">

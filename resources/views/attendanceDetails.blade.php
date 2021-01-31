@@ -1,4 +1,4 @@
-<div class="card md-3" >
+<div class="card md-5" >
     <div class="card-body" style="padding-bottom: 1px;">
         <h5 class="card-title"> تفاصيل الحضور</h5>
         <!--<p class="card-text">تجد هنا كل المعلومات المفصلة عن العاملين في شركة الباز للبرمجيات</p>-->
@@ -30,3 +30,5 @@
         </table>
     </div>
 </div>
+
+
